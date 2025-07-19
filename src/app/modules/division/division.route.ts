@@ -12,7 +12,7 @@ const router = Router();
 
 router.post(
   '/create',
-  checkAuth(Role.ADMIN && Role.SUPER_ADMIN),
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   validateRequest(createDivisionSchema)
 );
 router.get('/', DivisionCotroller.getAllDivisions);

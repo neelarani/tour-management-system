@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from 'express';
 import { IDivision } from './division.interface';
 import { Division } from './division.model';
 
