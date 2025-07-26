@@ -10,8 +10,6 @@ let server: Server;
 
 const startServer = async () => {
   try {
-    console.log(envVars.NODE_ENV);
-
     await mongoose.connect(envVars.DB_URL);
 
     console.log('connected to db');

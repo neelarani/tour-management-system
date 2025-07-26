@@ -5,6 +5,7 @@ import httpStatus from 'http-status-codes';
 import bcryptjs from 'bcryptjs';
 import { envVars } from '../../config/env';
 import { JwtPayload } from 'jsonwebtoken';
+import { useQuery } from 'mongoose-qb';
 
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
@@ -72,15 +73,24 @@ const updateUser = async (
   return updateUser;
 };
 
-const getAllUsers = async () => {
-  const users = await User.find({});
+const getAllUsers = async (query: Record<string, string>) =>
+  await useQuery<IUser>(User, query, {
+    fields: true,
+    filter: true,
+    sort: true,
+    paginate: true,
+  });
 
-  const totalUsers = await User.countDocuments();
+const getSingleUser = async (id: string) => {
+  const user = await User.findById(id).select('-password');
   return {
-    data: users,
-    meta: {
-      total: totalUsers,
-    },
+    data: user,
+  };
+};
+const getMe = async (userId: string) => {
+  const user = await User.findById(userId).select('-password');
+  return {
+    data: user,
   };
 };
 
@@ -88,4 +98,6 @@ export const UserServices = {
   createUser,
   getAllUsers,
   updateUser,
+  getMe,
+  getSingleUser,
 };

@@ -1,3 +1,5 @@
+import { useQuery } from 'mongoose-qb';
+import { deleteImageFromCloudinary } from '../../config/cloudinary.config';
 import { IDivision } from './division.interface';
 import { Division } from './division.model';
 
@@ -12,16 +14,13 @@ const createDivision = async (payload: IDivision) => {
   return division;
 };
 
-const getAllDivisions = async () => {
-  const divisions = await Division.find({});
-  const totalDivisions = await Division.countDocuments();
-  return {
-    data: divisions,
-    meta: {
-      total: totalDivisions,
-    },
-  };
-};
+const getAllDivisions = async (query: Record<string, string>) =>
+  await useQuery<IDivision>(Division, query, {
+    fields: true,
+    sort: true,
+    filter: true,
+    search: ['name'],
+  });
 
 const getSingleDivision = async (slug: string) => {
   const division = await Division.findOne({ slug });
@@ -49,6 +48,10 @@ const updateDivision = async (id: string, payload: Partial<IDivision>) => {
     new: true,
     runValidators: true,
   });
+
+  if (payload.thumbnail && existingDivision.thumbnail) {
+    await deleteImageFromCloudinary(existingDivision.thumbnail);
+  }
   return updateDivision;
 };
 

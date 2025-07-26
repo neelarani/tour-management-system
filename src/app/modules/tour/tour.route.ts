@@ -1,3 +1,4 @@
+import { multerUpload } from '../../config/multer.config';
 import { checkAuth } from '../../middlewares/checkAuth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { Role } from '../user/user.interface';
@@ -40,6 +41,7 @@ router.get('/', TourController.getAllTours);
 router.post(
   '/create',
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.array('files'),
   validateRequest(createTourZodSchema),
   TourController.createTour
 );
@@ -47,6 +49,7 @@ router.post(
 router.patch(
   '/:id',
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.array('files'),
   validateRequest(updateTourZodSchema),
   TourController.updateTour
 );

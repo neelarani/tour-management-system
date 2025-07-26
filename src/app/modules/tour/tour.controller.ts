@@ -1,9 +1,14 @@
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
+import { ITour } from './tour.interface';
 import { TourService } from './tour.service';
 
 const createTour = catchAsync(async (req, res) => {
-  const result = await TourService.createTour(req.body);
+  const payload: ITour = {
+    ...req.body,
+    images: (req.files as Express.Multer.File[])?.map(file => file.path),
+  };
+  const result = await TourService.createTour(payload);
 
   sendResponse(res, {
     status: 201,
@@ -26,7 +31,12 @@ const getAllTours = catchAsync(async (req, res) => {
 });
 
 const updateTour = catchAsync(async (req, res) => {
-  const result = await TourService.updateTour(req.params.id, req.body);
+  const payload: ITour = {
+    ...req.body,
+    images: (req.files as Express.Multer.File[]).map(file => file.path),
+  };
+
+  const result = await TourService.updateTour(req.params.id, payload);
 
   sendResponse(res, {
     status: 200,
@@ -50,7 +60,9 @@ const deleteTour = catchAsync(async (req, res) => {
 
 // Tour type
 const getAllTourTypes = catchAsync(async (req, res) => {
-  const result = await TourService.getAllTourTypes();
+  const result = await TourService.getAllTourTypes(
+    req.query as Record<string, string>
+  );
 
   sendResponse(res, {
     status: 200,

@@ -16,7 +16,7 @@ export const checkAuth =
       if (!accessToken) {
         throw new AppError(403, 'No Token Recieved');
       }
-      console.log(accessToken);
+
       const verifiedToken = verifyToken(
         accessToken,
         envVars.JWT_ACCESS_SECRET
@@ -26,6 +26,10 @@ export const checkAuth =
 
       if (!isUserExist) {
         throw new AppError(httpStatus.BAD_REQUEST, 'User does not Exist');
+      }
+
+      if (!isUserExist.isVerified) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'User is not verified!');
       }
 
       if (
@@ -45,6 +49,7 @@ export const checkAuth =
       if (!authRoles.includes(verifiedToken.role)) {
         throw new AppError(403, 'You are not permitted to view this route');
       }
+
       req.user = verifiedToken;
       next();
     } catch (error) {
