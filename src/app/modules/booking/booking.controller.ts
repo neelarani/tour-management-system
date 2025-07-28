@@ -9,6 +9,7 @@ const createBooking = catchAsync(async (req, res) => {
     req.body,
     decodeToken.userId
   );
+
   sendResponse(res, {
     status: 201,
     success: true,
