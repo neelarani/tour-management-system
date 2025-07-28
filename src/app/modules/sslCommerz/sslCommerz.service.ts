@@ -39,6 +39,8 @@ const sslPaymentInit = async (payload: ISSLCommerz) => {
       ship_country: 'N/A',
     };
 
+    console.log(envVars.SSL);
+
     const response = await axios({
       method: 'POST',
       url: envVars.SSL.SSL_PAYMENT_API,

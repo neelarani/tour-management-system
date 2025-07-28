@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { envVars } from '../../config/env';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
@@ -50,9 +51,23 @@ const cancelPayment = catchAsync(async (req, res) => {
   }
 });
 
+const getInvoiceDownloadUrl = catchAsync(async (req, res) => {
+  const { paymentId } = req.params;
+
+  const result = await PaymentService.getInvoiceDownloadUrl(paymentId);
+
+  sendResponse(res, {
+    status: 200,
+    success: true,
+    message: 'Invoice download URL retrieved successfully',
+    data: result,
+  });
+});
+
 export const PaymentController = {
   initPayment,
   successPayment,
   failPayment,
   cancelPayment,
+  getInvoiceDownloadUrl,
 };

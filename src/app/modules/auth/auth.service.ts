@@ -129,6 +129,7 @@ const changePassword = async (
 
   user!.save();
 };
+
 const forgotPassword = async (email: string) => {
   const isUserExist = await User.findOne({ email });
 
